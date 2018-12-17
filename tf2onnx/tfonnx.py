@@ -2445,7 +2445,7 @@ def process_tf_graph(tf_graph, continue_on_error=False, verbose=False, target=No
 
     # onnx requires topological sorting
     topological_sort(g.get_nodes())
-
+    topological_sort(g.get_nodes())
     g.update_proto()
 
     if verbose:
