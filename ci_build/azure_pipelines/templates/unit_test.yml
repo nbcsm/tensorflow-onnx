@@ -4,6 +4,7 @@ steps:
 - bash: |
     export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
     export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
-    python -u -m pytest -s --disable-pytest-warnings --verbose -r s tests
-  timeoutInMinutes: 30
+    export PYTHONUNBUFFERED=1
+    python -m pytest -s --disable-pytest-warnings --verbose -r s tests
+  timeoutInMinutes: 5
   displayName: 'Run UnitTest'
