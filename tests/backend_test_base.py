@@ -78,9 +78,8 @@ class Tf2OnnxBackendTestBase(unittest.TestCase):
         """Run test against msrt-next backend."""
         import onnxruntime as rt
         m = rt.InferenceSession(model_path)
-        # results = m.run(output_names, inputs)
-        # return results
-        return None
+        results = m.run(output_names, inputs)
+        return results
 
     def _run_backend(self, g, outputs, input_dict):
         model_proto = g.make_model("test")

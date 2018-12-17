@@ -5,5 +5,5 @@ steps:
     export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
     export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
     python -u -m pytest -s --disable-pytest-warnings --verbose -r s tests
-  timeoutInMinutes: 5
+  timeoutInMinutes: 30
   displayName: 'Run UnitTest'
