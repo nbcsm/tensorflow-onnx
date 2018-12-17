@@ -9,7 +9,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import unittest
-import pytest
 import numpy as np
 import tensorflow as tf
 
@@ -21,7 +20,6 @@ from backend_test_base import Tf2OnnxBackendTestBase
 
 
 class GRUTests(Tf2OnnxBackendTestBase):
-    @pytest.mark.timeout(30)
     def test_single_dynamic_gru(self):
         units = 5
         batch_size = 6
@@ -47,7 +45,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-03)
 
-    @pytest.mark.timeout(30)
     def test_multiple_dynamic_gru(self):
         units = 5
         batch_size = 6
@@ -94,7 +91,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-3)
 
-    @pytest.mark.timeout(30)
     def test_single_dynamic_gru_seq_length_is_const(self):
         units = 5
         batch_size = 6
@@ -121,7 +117,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-3)
 
-    @pytest.mark.timeout(30)
     def test_single_dynamic_gru_seq_length_is_not_const(self):
         units = 5
         batch_size = 6
@@ -151,7 +146,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-03)
 
-    @pytest.mark.timeout(30)
     def test_single_dynamic_gru_placeholder_input(self):
         units = 5
         x_val = np.array([[1., 1.], [2., 2.], [3., 3.], [4., 4.]], dtype=np.float32)
@@ -176,7 +170,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-03)
 
-    @pytest.mark.timeout(30)
     def test_single_dynamic_gru_ch_zero_state_initializer(self):
         units = 5
         batch_size = 6
@@ -206,7 +199,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-03)
 
-    @pytest.mark.timeout(30)
     @unittest.skip("FIXME: disable for now for accuracy problem")
     def test_single_dynamic_gru_random_weights(self):
         hidden_size = 5
@@ -235,7 +227,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, 0.0001)
 
-    @pytest.mark.timeout(30)
     @unittest.skip("FIXME: disable for now for accuracy problem")
     def test_single_dynamic_gru_random_weights2(self):
         hidden_size = 128
@@ -263,7 +254,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, 0.01)
 
-    @pytest.mark.timeout(30)
     def test_dynamic_bigru(self):
         units = 5
         batch_size = 6
@@ -297,7 +287,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-3)
 
-    @pytest.mark.timeout(30)
     def test_dynamic_bigru_output_consumed_only(self):
         units = 5
         batch_size = 6
@@ -330,7 +319,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-3)
 
-    @pytest.mark.timeout(30)
     def test_dynamic_bidirectional_but_one_gru(self):
         units = 5
         batch_size = 6
@@ -361,7 +349,6 @@ class GRUTests(Tf2OnnxBackendTestBase):
         output_names_with_port = ["output:0", "cell_state:0"]
         self.run_test_case(feed_dict, input_names_with_port, output_names_with_port, rtol=1e-3)
 
-    @pytest.mark.timeout(30)
     def test_dynamic_bidirectional_but_one_gru_and_output_consumed_only(self):
         units = 5
         batch_size = 6

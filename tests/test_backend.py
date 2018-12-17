@@ -8,7 +8,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import unittest
-import pytest
 from itertools import product
 from distutils.version import LooseVersion
 
@@ -352,10 +351,7 @@ class BackendTests(Tf2OnnxBackendTestBase):
         self._run_test_case([_OUTPUT], {_INPUT: x_val}, rtol=1e-05)
 
     @unittest.skipIf(*onnxruntime_check("Abs"))
-    @pytest.mark.timeout(5)
     def test_abs(self):
-        import time
-        time.sleep(10)
         x_val = np.array([1.0, 2.0, -3.0, -4.0], dtype=np.float32).reshape((2, 2))
         x = tf.placeholder(tf.float32, [2, 2], name=_TFINPUT)
         x_ = tf.abs(x)
