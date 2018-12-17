@@ -65,16 +65,16 @@ jobs:
 # TODO: ordinary python is preferred but built-in python3.6 does not have libpython3.6m.so, onnxruntime will fail with
 # Error: 'libpython3.6m.so.1.0: cannot open shared object file: No such file or directory'
 # so have to use conda here, may switch back to UsePythonVersion when the issue is fixed.
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '$(CI_PYTHON_VERSION)'
-        architecture: 'x64'
-
-#    - task: CondaEnvironment@1
+#    - task: UsePythonVersion@0
 #      inputs:
-#        createCustomEnvironment: 'true'
-#        environmentName: 'tf2onnx'
-#        packageSpecs: 'python=$(CI_PYTHON_VERSION)'
+#        versionSpec: '$(CI_PYTHON_VERSION)'
+#        architecture: 'x64'
+
+    - task: CondaEnvironment@1
+      inputs:
+        createCustomEnvironment: 'true'
+        environmentName: 'tf2onnx'
+        packageSpecs: 'python=$(CI_PYTHON_VERSION)'
 
     - ${{ if eq(parameters.run_setup, 'True') }}:
       - template: 'setup.yml'
