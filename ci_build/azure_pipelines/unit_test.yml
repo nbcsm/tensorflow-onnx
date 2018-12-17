@@ -21,6 +21,7 @@ jobs:
       steps:
       - bash: |
           cd examples
+          pip install onnxruntime-0.1.5-cp36-cp36m-win_amd64.whl
           export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
           export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
           export PYTHONUNBUFFERED=1
