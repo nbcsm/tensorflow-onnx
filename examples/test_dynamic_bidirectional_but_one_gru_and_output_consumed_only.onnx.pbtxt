@@ -1,0 +1,422 @@
+ir_version: 3
+producer_name: "tf2onnx"
+producer_version: "0.4.0"
+graph {
+  node {
+    input: "input_1:0"
+    output: "Transpose__4:0"
+    name: "Transpose__4"
+    op_type: "Transpose"
+    attribute {
+      name: "perm"
+      ints: 1
+      ints: 0
+      ints: 2
+      type: INTS
+    }
+  }
+  node {
+    input: "Transpose__4:0"
+    output: "Shape__8:0"
+    name: "Shape__8"
+    op_type: "Shape"
+  }
+  node {
+    input: "Shape__8:0"
+    output: "Cast__9:0"
+    name: "Cast__9"
+    op_type: "Cast"
+    attribute {
+      name: "to"
+      i: 1
+      type: INT
+    }
+  }
+  node {
+    input: "Cast__9:0"
+    output: "Slice__10:0"
+    name: "Slice__10"
+    op_type: "Slice"
+    attribute {
+      name: "axes"
+      ints: 0
+      type: INTS
+    }
+    attribute {
+      name: "ends"
+      ints: 2
+      type: INTS
+    }
+    attribute {
+      name: "starts"
+      ints: 1
+      type: INTS
+    }
+  }
+  node {
+    input: "Slice__10:0"
+    output: "Cast__11:0"
+    name: "Cast__11"
+    op_type: "Cast"
+    attribute {
+      name: "to"
+      i: 7
+      type: INT
+    }
+  }
+  node {
+    input: "Cast__9:0"
+    output: "Slice__12:0"
+    name: "Slice__12"
+    op_type: "Slice"
+    attribute {
+      name: "axes"
+      ints: 0
+      type: INTS
+    }
+    attribute {
+      name: "ends"
+      ints: 1
+      type: INTS
+    }
+    attribute {
+      name: "starts"
+      ints: 0
+      type: INTS
+    }
+  }
+  node {
+    input: "Slice__12:0"
+    input: "Cast__11:0"
+    output: "Tile__13:0"
+    name: "Tile__13"
+    op_type: "Tile"
+  }
+  node {
+    input: "Tile__13:0"
+    output: "Cast__14:0"
+    name: "Cast__14"
+    op_type: "Cast"
+    attribute {
+      name: "to"
+      i: 6
+      type: INT
+    }
+  }
+  node {
+    input: "Transpose__4:0"
+    input: "W__35"
+    input: "R__36"
+    input: "B__37"
+    input: "Cast__14:0"
+    input: "initial__34"
+    output: "GRU__38:0"
+    output: "GRU__38:1"
+    name: "GRU__38"
+    op_type: "GRU"
+    attribute {
+      name: "activations"
+      strings: "sigmoid"
+      strings: "Tanh"
+      strings: "sigmoid"
+      strings: "Tanh"
+      type: STRINGS
+    }
+    attribute {
+      name: "direction"
+      s: "bidirectional"
+      type: STRING
+    }
+    attribute {
+      name: "hidden_size"
+      i: 5
+      type: INT
+    }
+  }
+  node {
+    input: "GRU__38:0"
+    output: "Slice__39:0"
+    name: "Slice__39"
+    op_type: "Slice"
+    attribute {
+      name: "axes"
+      ints: 1
+      type: INTS
+    }
+    attribute {
+      name: "ends"
+      ints: 1
+      type: INTS
+    }
+    attribute {
+      name: "starts"
+      ints: 0
+      type: INTS
+    }
+  }
+  node {
+    input: "Slice__39:0"
+    output: "Squeeze__17:0"
+    name: "Squeeze__17"
+    op_type: "Squeeze"
+    attribute {
+      name: "axes"
+      ints: 1
+      type: INTS
+    }
+  }
+  node {
+    input: "Squeeze__17:0"
+    output: "Transpose__18:0"
+    name: "Transpose__18"
+    op_type: "Transpose"
+    attribute {
+      name: "perm"
+      ints: 1
+      ints: 0
+      ints: 2
+      type: INTS
+    }
+  }
+  node {
+    input: "Transpose__18:0"
+    output: "output/input_Unsqueeze__41:0"
+    name: "output/input_Unsqueeze__41"
+    op_type: "Unsqueeze"
+    attribute {
+      name: "axes"
+      ints: 0
+      type: INTS
+    }
+  }
+  node {
+    input: "GRU__38:0"
+    output: "Slice__40:0"
+    name: "Slice__40"
+    op_type: "Slice"
+    attribute {
+      name: "axes"
+      ints: 1
+      type: INTS
+    }
+    attribute {
+      name: "ends"
+      ints: 2
+      type: INTS
+    }
+    attribute {
+      name: "starts"
+      ints: 1
+      type: INTS
+    }
+  }
+  node {
+    input: "Slice__40:0"
+    output: "Squeeze__32:0"
+    name: "Squeeze__32"
+    op_type: "Squeeze"
+    attribute {
+      name: "axes"
+      ints: 1
+      type: INTS
+    }
+  }
+  node {
+    input: "Squeeze__32:0"
+    output: "Transpose__33:0"
+    name: "Transpose__33"
+    op_type: "Transpose"
+    attribute {
+      name: "perm"
+      ints: 1
+      ints: 0
+      ints: 2
+      type: INTS
+    }
+  }
+  node {
+    input: "Transpose__33:0"
+    output: "output/input_Unsqueeze__42:0"
+    name: "output/input_Unsqueeze__42"
+    op_type: "Unsqueeze"
+    attribute {
+      name: "axes"
+      ints: 0
+      type: INTS
+    }
+  }
+  node {
+    input: "output/input_Unsqueeze__41:0"
+    input: "output/input_Unsqueeze__42:0"
+    output: "output/input_Concat__43:0"
+    name: "output/input_Concat__43"
+    op_type: "Concat"
+    attribute {
+      name: "axis"
+      i: 0
+      type: INT
+    }
+  }
+  node {
+    input: "output/input_Concat__43:0"
+    output: "raw_output___2:0"
+    name: "output"
+    op_type: "Identity"
+  }
+  node {
+    input: "raw_output___2:0"
+    output: "output:0"
+    name: "Identity__3"
+    op_type: "Identity"
+  }
+  name: "tf2onnx"
+  initializer {
+    dims: 2
+    dims: 6
+    dims: 5
+    data_type: FLOAT
+    name: "initial__34"
+    raw_data: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"
+  }
+  initializer {
+    dims: 2
+    dims: 15
+    dims: 2
+    data_type: FLOAT
+    name: "W__35"
+    raw_data: "\300\027\306\274@\354\247<P\275\323\275s\275\320\276|s\301\276\364\360\374>\030\031\373>`\007\223=\300\252$\275\375\271\016\277 \264\331=0\212\016>X\265\017\277\270\322\010\276j_\202>\246L\001\276`\036\274\275\212\303\201>\010\275\367=\330\021\252\275\"\216\360>>\342\272>\372\321\205\276\250\274i>^\206\322>3\245\017\277\034\034\030>\016\002\262>\340A{>\030d\">\300\027\306\274@\354\247<P\275\323\275s\275\320\276|s\301\276\364\360\374>\030\031\373>`\007\223=\300\252$\275\375\271\016\277 \264\331=0\212\016>X\265\017\277\270\322\010\276j_\202>\246L\001\276`\036\274\275\212\303\201>\010\275\367=\330\021\252\275\"\216\360>>\342\272>\372\321\205\276\250\274i>^\206\322>3\245\017\277\034\034\030>\016\002\262>\340A{>\030d\">"
+  }
+  initializer {
+    dims: 2
+    dims: 15
+    dims: 5
+    data_type: FLOAT
+    name: "R__36"
+    raw_data: "\005\002\251\276\360\355\362>T\306\r\277\200\334\270>\000\030\271>du\302>\020\303E=RO\233>\336\307\013?\274\341\327>\336g\213>\224y\240\276\264\236u\2768\016\212>\310\354\367\275\250\343\r>\224\\\237>L\201\034\276p\341\222\275t\220\342> x\317=\262z\231\276\247\360\365\276\202\006\357\276Pm\310>\200\3746\2754D\360>:\211\260\276\350\316\r\277,\241\314\276,a\322\275ND,\276h\216\331=\006^\240>\244\021\013?4\272y\276\350[\214>\266,\214>P\224*=_\010\211\276\024\367\370\275\260}\201=\006\307k\276\244\265Y\276\300\330\223>\200V\255>\\{I\276TKc>\2304\256>\204D\332>*1\026\2774\243\032>b\320\263>\300|^>~\305\251>\340\324-\276\250\327\210=\357\373*?(b#>\330V=>\326\330\370>\317\376\024?|\242F\276#\370\211\276\034\234]>P\3024\275\326\'\234>\222\021\311\276\322\257\355>\020D.\275\3518\001?\330!\035\2765\335\025?\276\262\313>\230\"\223=\005\002\251\276\360\355\362>T\306\r\277\200\334\270>\000\030\271>du\302>\020\303E=RO\233>\336\307\013?\274\341\327>\336g\213>\224y\240\276\264\236u\2768\016\212>\310\354\367\275\250\343\r>\224\\\237>L\201\034\276p\341\222\275t\220\342> x\317=\262z\231\276\247\360\365\276\202\006\357\276Pm\310>\200\3746\2754D\360>:\211\260\276\350\316\r\277,\241\314\276,a\322\275ND,\276h\216\331=\006^\240>\244\021\013?4\272y\276\350[\214>\266,\214>P\224*=_\010\211\276\024\367\370\275\260}\201=\006\307k\276\244\265Y\276\300\330\223>\200V\255>\\{I\276TKc>\2304\256>\204D\332>*1\026\2774\243\032>b\320\263>\300|^>~\305\251>\340\324-\276\250\327\210=\357\373*?(b#>\330V=>\326\330\370>\317\376\024?|\242F\276#\370\211\276\034\234]>P\3024\275\326\'\234>\222\021\311\276\322\257\355>\020D.\275\3518\001?\330!\035\2765\335\025?\276\262\313>\230\"\223="
+  }
+  initializer {
+    dims: 2
+    dims: 30
+    data_type: FLOAT
+    name: "B__37"
+    raw_data: "\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\200?\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"
+  }
+  doc_string: "test"
+  input {
+    name: "initial__34"
+    type {
+      tensor_type {
+        elem_type: FLOAT
+        shape {
+          dim {
+            dim_value: 2
+          }
+          dim {
+            dim_value: 6
+          }
+          dim {
+            dim_value: 5
+          }
+        }
+      }
+    }
+  }
+  input {
+    name: "W__35"
+    type {
+      tensor_type {
+        elem_type: FLOAT
+        shape {
+          dim {
+            dim_value: 2
+          }
+          dim {
+            dim_value: 15
+          }
+          dim {
+            dim_value: 2
+          }
+        }
+      }
+    }
+  }
+  input {
+    name: "R__36"
+    type {
+      tensor_type {
+        elem_type: FLOAT
+        shape {
+          dim {
+            dim_value: 2
+          }
+          dim {
+            dim_value: 15
+          }
+          dim {
+            dim_value: 5
+          }
+        }
+      }
+    }
+  }
+  input {
+    name: "B__37"
+    type {
+      tensor_type {
+        elem_type: FLOAT
+        shape {
+          dim {
+            dim_value: 2
+          }
+          dim {
+            dim_value: 30
+          }
+        }
+      }
+    }
+  }
+  input {
+    name: "input_1:0"
+    type {
+      tensor_type {
+        elem_type: FLOAT
+        shape {
+          dim {
+            dim_value: 6
+          }
+          dim {
+            dim_value: 3
+          }
+          dim {
+            dim_value: 2
+          }
+        }
+      }
+    }
+  }
+  output {
+    name: "output:0"
+    type {
+      tensor_type {
+        elem_type: FLOAT
+        shape {
+          dim {
+            dim_value: 2
+          }
+          dim {
+            dim_value: 6
+          }
+          dim {
+            dim_param: "unk__44"
+          }
+          dim {
+            dim_value: 5
+          }
+        }
+      }
+    }
+  }
+}
+opset_import {
+  version: 7
+}
