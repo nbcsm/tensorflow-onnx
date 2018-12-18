@@ -8,7 +8,7 @@ onnx.checker.check_model(onnx_model)
 print('The model is checked!')
 
 units = 5
-batch_size = 6
+batch_size = 2
 x_val = np.array([[1., 1.], [2., 2.], [3., 3.]], dtype=np.float32)
 x_val = np.stack([x_val] * batch_size)
 
