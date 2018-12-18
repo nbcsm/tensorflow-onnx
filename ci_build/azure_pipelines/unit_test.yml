@@ -22,7 +22,7 @@ jobs:
       steps:
       - bash: |
           cd examples
-          pip install onnxruntime-0.1.4-cp35-cp35m-win_amd64.whl
+          pip install onnxruntime-0.1.4-cp35-cp35m-win_amd64.whl --ignore-installed
           export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
           export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
           export PYTHONUNBUFFERED=1
@@ -43,7 +43,7 @@ jobs:
           cd examples
           where python
           where pip
-          pip install onnxruntime-0.1.4-cp35-cp35m-win_amd64.whl
+          pip install onnxruntime-0.1.4-cp35-cp35m-win_amd64.whl --ignore-installed
           export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
           export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
           export PYTHONUNBUFFERED=1
