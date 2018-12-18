@@ -48,4 +48,5 @@ jobs:
           export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
           export PYTHONUNBUFFERED=1
           python test.py
+        timeoutInMinutes: 5
         displayName: 'Run script test.py'
