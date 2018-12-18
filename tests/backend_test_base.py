@@ -16,7 +16,6 @@ import tempfile
 import unittest
 
 import numpy as np
-import onnx
 import tensorflow as tf
 from tensorflow.python.ops import variables as variables_lib
 from tf2onnx import utils
@@ -83,7 +82,6 @@ class Tf2OnnxBackendTestBase(unittest.TestCase):
 
     def _run_backend(self, g, outputs, input_dict):
         model_proto = g.make_model("test")
-        onnx.checker.check_model(model_proto)
         model_path = self.save_onnx_model(model_proto, input_dict)
         if type(self).BACKEND == "onnxmsrtnext":
             y = self.run_onnxmsrtnext(model_path, input_dict, outputs)
