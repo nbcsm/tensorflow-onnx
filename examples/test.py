@@ -22,7 +22,9 @@ print(str(m.get_inputs()))
 print(str(m.get_outputs()))
 
 print("run model")
-results = m.run(output_names_with_port, feed_dict)
+run_options = rt.RunOptions()
+run_options.run_log_verbosity_level = 100
+results = m.run(output_names_with_port, feed_dict, run_options)
 print(results)
 
 
