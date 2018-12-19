@@ -53,7 +53,12 @@ class Tf2OnnxBackendTestBase(unittest.TestCase):
 
     @staticmethod
     def assertAllClose(expected, actual, **kwargs):
-        np.testing.assert_allclose(expected, actual, **kwargs)
+        try:
+            np.testing.assert_allclose(expected, actual, **kwargs)
+        except Exception as e:
+            diff =  np.abs(actual - expected) / np.abs(actual)
+            print("max={}, min={}".format(np.max(diff), np.min(diff)))
+            raise e
 
     @staticmethod
     def assertAllEqual(expected, actual, **kwargs):
