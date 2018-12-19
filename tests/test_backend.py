@@ -223,7 +223,7 @@ class BackendTests(Tf2OnnxBackendTestBase):
             _ = tf.identity(mp, name=_TFOUTPUT)
 
             self.log.debug(str(p))
-            self._run_test_case([_OUTPUT], {_INPUT: x_val})
+            self._run_test_case([_OUTPUT], {_INPUT: x_val}, rtol=1e-06)
 
     def _conv_test(self, x_val, w, strides=None, padding="VALID", dilations=None, rtol=1e-07):
         if strides is None:
