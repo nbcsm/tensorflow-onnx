@@ -214,6 +214,7 @@ class BackendTests(Tf2OnnxBackendTestBase):
 
     @unittest.skipIf(*onnxruntime_check("AveragePool"))
     def test_avgpool(self):
+        ok = True
         for p in get_conv_getdata(kind=0):
             _, padding, x_shape, ksize, strides = p
             tf.reset_default_graph()
@@ -223,7 +224,13 @@ class BackendTests(Tf2OnnxBackendTestBase):
             _ = tf.identity(mp, name=_TFOUTPUT)
 
             self.log.debug(str(p))
-            self._run_test_case([_OUTPUT], {_INPUT: x_val}, rtol=1e-06)
+            print(str(p))
+            try:
+                self._run_test_case([_OUTPUT], {_INPUT: x_val}, rtol=1e-06)
+            except AssertionError as e:
+                print(str(e))
+                ok = False
+        assert ok
 
     def _conv_test(self, x_val, w, strides=None, padding="VALID", dilations=None, rtol=1e-07):
         if strides is None:
