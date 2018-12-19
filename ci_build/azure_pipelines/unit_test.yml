@@ -19,10 +19,31 @@ jobs:
     onnx_opsets: ['7']
     onnx_backends: {onnxruntime: ['0.1.4']}
     job:
+      displayName: '0.1.4 debug build'
       steps:
       - bash: |
           cd examples
           pip install onnxruntime-0.1.4-cp35-cp35m-win_amd64.whl --ignore-installed
+          export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
+          export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
+          export PYTHONUNBUFFERED=1
+          python test.py
+        timeoutInMinutes: 5
+        displayName: 'Run bash test.py'
+
+- template: 'templates/job_generator.yml'
+  parameters:
+    platforms: ['windows']
+    python_versions: ['3.5']
+    tf_versions: ['1.11']
+    onnx_opsets: ['7']
+    onnx_backends: {onnxruntime: ['0.1.4']}
+    job:
+      displayName: '0.1.4 debug build, no parallel'
+      steps:
+      - bash: |
+          cd examples
+          pip install fix/onnxruntime-0.1.4-cp35-cp35m-win_amd64.whl --ignore-installed
           export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
           export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
           export PYTHONUNBUFFERED=1
