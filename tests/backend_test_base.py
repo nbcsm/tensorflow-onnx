@@ -57,7 +57,9 @@ class Tf2OnnxBackendTestBase(unittest.TestCase):
             np.testing.assert_allclose(expected, actual, **kwargs)
         except Exception as e:
             diff =  np.abs(actual - expected) / np.abs(actual)
-            print("max={}, min={}".format(np.max(diff), np.min(diff)))
+            print("max={}, min={}, count_nonzero={}".format(np.max(diff), np.min(diff), np.count_nonzero(diff)))
+            unique, counts = np.unique(diff, return_counts=True)
+            print(np.asarray((unique, counts)).T)
             raise e
 
     @staticmethod
