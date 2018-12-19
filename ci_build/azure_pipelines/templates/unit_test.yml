@@ -4,6 +4,7 @@ steps:
 - bash: |
     export TF2ONNX_TEST_BACKEND=$(CI_ONNX_BACKEND)
     export TF2ONNX_TEST_OPSET=$(CI_ONNX_OPSET)
+    grep flags /proc/cpuinfo
     python -m pytest --cov=tf2onnx --cov-report=term --disable-pytest-warnings -r s tests
   timeoutInMinutes: 5
   displayName: 'Run UnitTest'
