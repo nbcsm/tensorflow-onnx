@@ -724,7 +724,6 @@ class BackendTests(Tf2OnnxBackendTestBase):
         _ = tf.identity(mi, name=_TFOUTPUT)
         self._run_test_case([_OUTPUT], {_INPUT: x_val1, _INPUT1: x_val2})
 
-
     def test_sequeeze_no_axis_specified(self):
         x_val = np.array([1.0, 2.0, 3.0, 4.0], dtype=np.float32).reshape((2, 2, 1))
         x = tf.placeholder(tf.float32, [2, 2, 1], name=_TFINPUT)
@@ -974,95 +973,68 @@ class BackendTests(Tf2OnnxBackendTestBase):
         _ = tf.identity(x_, name=_TFOUTPUT)
         self._run_test_case([_OUTPUT], {_INPUT: x_val})
 
-    def _test_range_const(self, extra_opset=None):
-        process_args = {}
-        if extra_opset is not None:
-            process_args["extra_opset"] = [extra_opset]
-
+    @check_opset_min_version(7, "cast")
+    def test_range_const(self):
         x = tf.range(5)
         _ = tf.identity(x, name=_TFOUTPUT)
-        self._run_test_case([_OUTPUT], {}, process_args=process_args)
+        self._run_test_case([_OUTPUT], {})
         tf.reset_default_graph()
 
         x = tf.range(3, 3, 5)
         _ = tf.identity(x, name=_TFOUTPUT)
-        self._run_test_case([_OUTPUT], {}, process_args=process_args)
+        self._run_test_case([_OUTPUT], {})
         tf.reset_default_graph()
 
         x = tf.range(0, -5, -2)
         _ = tf.identity(x, name=_TFOUTPUT)
-        self._run_test_case([_OUTPUT], {}, process_args=process_args)
+        self._run_test_case([_OUTPUT], {})
         tf.reset_default_graph()
 
         x = tf.range(-5.0, 5.0, 1.5)
         _ = tf.identity(x, name=_TFOUTPUT)
-        self._run_test_case([_OUTPUT], {}, process_args=process_args)
+        self._run_test_case([_OUTPUT], {})
         tf.reset_default_graph()
 
         x = tf.range(2.5, 5.0, 10.0)
         _ = tf.identity(x, name=_TFOUTPUT)
-        self._run_test_case([_OUTPUT], {}, process_args=process_args)
+        self._run_test_case([_OUTPUT], {})
 
-    def _test_range_non_const(self, extra_opset=None):
-        process_args = {}
-        if extra_opset is not None:
-            process_args["extra_opset"] = [extra_opset]
+    def test_range_non_const(self):
+        def check_ms_range(g):
+            if not self.config.is_ms_opset_enabled:
+                return True
+            return is_ms_domain(group_nodes_by_type(g)["Range"][0].domain)
 
         x = tf.range(5.0)
         _ = tf.identity(x, name=_TFOUTPUT)
-        g = self._run_test_case([_OUTPUT], {}, process_args=process_args)
-        self.assertTrue(extra_opset is None
-                        or check_node_domain(group_nodes_by_type(g)["Range"][0], extra_opset.domain))
+        self._run_test_case([_OUTPUT], {}, graph_validator=lambda g: check_ms_range(g))
         tf.reset_default_graph()
 
         x = tf.range(0, -5.0, -2)
         _ = tf.identity(x, name=_TFOUTPUT)
-        g = self._run_test_case([_OUTPUT], {}, process_args=process_args)
-        self.assertTrue(extra_opset is None
-                        or check_node_domain(group_nodes_by_type(g)["Range"][0], extra_opset.domain))
+        self._run_test_case([_OUTPUT], {}, graph_validator=lambda g: check_ms_range(g))
         tf.reset_default_graph()
 
         # disable this case for ms domain due to onnxruntime range-1 issue
         # https://github.com/Microsoft/onnxruntime/issues/730
-        if not (extra_opset and extra_opset.domain == constants.MICROSOFT_DOMAIN):
+        if not self.config.is_ms_opset_enabled:
             x = tf.range(3.0, 3.0, 5)
             _ = tf.identity(x, name=_TFOUTPUT)
-            g = self._run_test_case([_OUTPUT], {}, process_args=process_args)
-            self.assertTrue(extra_opset is None
-                            or check_node_domain(group_nodes_by_type(g)["Range"][0], extra_opset.domain))
+            self._run_test_case([_OUTPUT], {}, graph_validator=lambda g: check_ms_range(g))
             tf.reset_default_graph()
 
         delta_val = np.array(1.5, dtype=np.float32)
         delta = tf.placeholder(tf.float32, shape=(), name=_TFINPUT)
         x = tf.range(-5.0, 5.0, delta)
         _ = tf.identity(x, name=_TFOUTPUT)
-        g = self._run_test_case([_OUTPUT], {_INPUT: delta_val}, process_args=process_args)
-        self.assertTrue(extra_opset is None
-                        or check_node_domain(group_nodes_by_type(g)["Range"][0], extra_opset.domain))
+        self._run_test_case([_OUTPUT], {_INPUT: delta_val}, graph_validator=lambda g: check_ms_range(g))
         tf.reset_default_graph()
 
         start_val = np.array(2.5, dtype=np.float32)
         start = tf.placeholder(tf.float32, shape=(), name=_TFINPUT)
         x = tf.range(start, 5.0, 10.0)
         _ = tf.identity(x, name=_TFOUTPUT)
-        g = self._run_test_case([_OUTPUT], {_INPUT: start_val}, process_args=process_args)
-        self.assertTrue(extra_opset is None
-                        or check_node_domain(group_nodes_by_type(g)["Range"][0], extra_opset.domain))
-
-    @check_opset_min_version(7, "cast")
-    def test_range_const(self):
-        self._test_range_const()
-
-    def test_range_non_const(self):
-        self._test_range_non_const()
-
-    @test_ms_domain()
-    def test_ms_range_const(self, extra_opset):
-        self._test_range_const(extra_opset)
-
-    @test_ms_domain()
-    def test_ms_range_non_const(self, extra_opset):
-        self._test_range_non_const(extra_opset)
+        self._run_test_case([_OUTPUT], {_INPUT: start_val}, graph_validator=lambda g: check_ms_range(g))
 
     @check_onnxruntime_incompatibility("Sqrt")
     def test_rsqrt(self):
@@ -1691,16 +1663,16 @@ class BackendTests(Tf2OnnxBackendTestBase):
     def test_reverse_sequence_time_major(self):
         self._test_reverse_sequence_time_major()
 
-    # only support onnxruntime with version larger than 0.4.0
-    @test_ms_domain()
-    @check_onnxruntime_min_version("0.4.0")
-    def test_ms_reverse_sequence_batch_major(self, extra_opset):
-        self._test_reverse_sequence_batch_major(extra_opset)
-
-    @test_ms_domain()
-    @check_onnxruntime_min_version("0.4.0")
-    def test_ms_reverse_sequence_time_major(self, extra_opset):
-        self._test_reverse_sequence_time_major(extra_opset)
+    # # only support onnxruntime with version larger than 0.4.0
+    # @test_ms_domain()
+    # @check_onnxruntime_min_version("0.4.0")
+    # def test_ms_reverse_sequence_batch_major(self, extra_opset):
+    #     self._test_reverse_sequence_batch_major(extra_opset)
+    #
+    # @test_ms_domain()
+    # @check_onnxruntime_min_version("0.4.0")
+    # def test_ms_reverse_sequence_time_major(self, extra_opset):
+    #     self._test_reverse_sequence_time_major(extra_opset)
 
     @check_opset_min_version(8, "where")
     def test_where(self):
@@ -2067,6 +2039,7 @@ class BackendTests(Tf2OnnxBackendTestBase):
         input_x = tf.placeholder(dtype=tf.float32, shape=input_val.shape, name=_TFINPUT)  # NHWC
         _ = tf.space_to_batch_nd(input_x, block_size, pad, name=_TFOUTPUT)
         self._run_test_case([_OUTPUT], {_INPUT: input_val})
+
 
 if __name__ == '__main__':
     unittest_main()

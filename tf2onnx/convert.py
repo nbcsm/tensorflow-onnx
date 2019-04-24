@@ -66,10 +66,7 @@ def get_args():
         args.target = args.target.split(",")
 
     if args.extra_opset:
-        tokens = args.extra_opset.split(':')
-        if len(tokens) != 2:
-            raise ValueError("invalid extra_opset argument")
-        args.extra_opset = [utils.make_opsetid(tokens[0], int(tokens[1]))]
+        args.extra_opset = [utils.parse_opsetid(args.extra_opset)]
 
     return args
 

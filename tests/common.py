@@ -17,7 +17,7 @@ __all__ = ["TestConfig", "get_test_config", "unittest_main", "check_onnxruntime_
            "check_tf_min_version", "check_tf_max_version", "skip_tf_versions", "check_onnxruntime_min_version",
            "check_opset_min_version", "check_target", "skip_caffe2_backend", "skip_onnxruntime_backend",
            "skip_opset", "check_onnxruntime_incompatibility", "validate_const_node",
-           "group_nodes_by_type", "test_ms_domain", "check_node_domain"]
+           "group_nodes_by_type", "is_ms_domain"]
 
 
 # pylint: disable=missing-docstring
@@ -27,6 +27,8 @@ class TestConfig(object):
         self.platform = sys.platform
         self.tf_version = self._get_tf_version()
         self.opset = int(os.environ.get("TF2ONNX_TEST_OPSET", constants.PREFERRED_OPSET))
+        extra_opset = os.environ.get("TF2ONNX_TEST_EXTRA_OPSET", None)
+        self.extra_opset = [utils.parse_opsetid(extra_opset)] if extra_opset else []
         self.target = os.environ.get("TF2ONNX_TEST_TARGET", ",".join(constants.DEFAULT_TARGET)).split(',')
         self.backend = os.environ.get("TF2ONNX_TEST_BACKEND", "onnxruntime")
         self.backend_version = self._get_backend_version()
@@ -44,6 +46,12 @@ class TestConfig(object):
     @property
     def is_caffe2_backend(self):
         return self.backend == "caffe2"
+
+    @property
+    def is_ms_opset_enabled(self):
+        if not self.extra_opset:
+            return False
+        return any(is_ms_domain(opset.domain) for opset in self.extra_opset)
 
     @property
     def is_debug_mode(self):
@@ -71,6 +79,7 @@ class TestConfig(object):
                             "platform={}".format(self.platform),
                             "tf_version={}".format(self.tf_version),
                             "opset={}".format(self.opset),
+                            "extra_opset={}".format(self.extra_opset),
                             "target={}".format(self.target),
                             "backend={}".format(self.backend),
                             "backend_version={}".format(self.backend_version),
@@ -87,6 +96,8 @@ class TestConfig(object):
                                 choices=["caffe2", "onnxmsrtnext", "onnxruntime"],
                                 help="backend to test against")
             parser.add_argument("--opset", type=int, default=config.opset, help="opset to test against")
+            parser.add_argument("--extra_opset", default=None,
+                                help="extra opset with format like domain:version, e.g. com.microsoft:1")
             parser.add_argument("--target", default=",".join(config.target), choices=constants.POSSIBLE_TARGETS,
                                 help="target platform")
             parser.add_argument("--verbose", "-v", help="verbose output, option is additive", action="count")
@@ -100,6 +111,8 @@ class TestConfig(object):
 
             config.backend = args.backend
             config.opset = args.opset
+            if args.extra_opset:
+                config.extra_opset = [utils.parse_opsetid(args.extra_opset)]
             config.target = args.target.split(',')
             config.log_level = logging.get_verbosity_level(args.verbose, config.log_level)
             if args.temp_dir:
@@ -280,30 +293,5 @@ def check_gru_count(graph, expected_count):
     return check_op_count(graph, "GRU", expected_count)
 
 
-_MAX_MS_OPSET_VERSION = 1
-
-
-def test_ms_domain(versions=None):
-    """ Parameterize test case to apply ms opset(s) as extra_opset. """
-
-    @check_onnxruntime_backend()
-    def _custom_name_func(testcase_func, param_num, param):
-        del param_num
-        arg = param.args[0]
-        return "%s_%s" % (testcase_func.__name__, arg.version)
-
-    # Test all opset versions in ms domain if versions is not specified
-    if versions is None:
-        versions = list(range(1, _MAX_MS_OPSET_VERSION + 1))
-
-    opsets = []
-    for version in versions:
-        opsets.append([utils.make_opsetid(constants.MICROSOFT_DOMAIN, version)])
-    return parameterized.expand(opsets, testcase_func_name=_custom_name_func)
-
-
-def check_node_domain(node, domain):
-    # None or empty string means onnx domain
-    if not domain:
-        return not node.domain
-    return node.domain == domain
+def is_ms_domain(domain):
+    return domain == constants.MICROSOFT_DOMAIN

@@ -438,8 +438,19 @@ def get_onnx_version():
 
 
 def make_opsetid(domain, version):
-    make_sure(isinstance(version, int), "version must be an integer")
+    if not isinstance(version, int):
+        raise ValueError("version must be an integer")
     return helper.make_opsetid(domain, version)
+
+
+def parse_opsetid(input):
+    if not input:
+        raise ValueError("input is none or empty")
+
+    tokens = input.split(':')
+    if len(tokens) != 2:
+        raise ValueError("invalid opset string: {}".format(input))
+    return make_opsetid(tokens[0], int(tokens[1]))
 
 
 def is_onnx_domain(domain):
