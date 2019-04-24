@@ -1015,6 +1015,7 @@ class BackendTests(Tf2OnnxBackendTestBase):
         self._run_test_case([_OUTPUT], {}, graph_validator=lambda g: check_ms_range(g))
         tf.reset_default_graph()
 
+        # TODO: enabled this after onnxruntime 0.4 is released
         # disable this case for ms domain due to onnxruntime range-1 issue
         # https://github.com/Microsoft/onnxruntime/issues/730
         if not self.config.is_ms_opset_enabled:
